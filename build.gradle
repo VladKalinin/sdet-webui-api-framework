@@ -9,11 +9,117 @@ repositories {
     mavenCentral()
 }
 
+ext {
+    selenideVersion = '7.4.1'
+    junitVersion = '5.8.1'
+    cucumberVersion = '7.20.1'
+    springVersion = '6.2.2'
+    assertjVersion = '3.27.3'
+    slf4j2Version = '2.24.3'
+
+}
+
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation "com.codeborne:selenide:$selenideVersion"
+    implementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    implementation "io.cucumber:cucumber-java:$cucumberVersion"
+    implementation "io.cucumber:cucumber-junit:$cucumberVersion"
+    implementation "io.cucumber:cucumber-spring:$cucumberVersion"
+    implementation "org.springframework:spring-context:$springVersion"
+    implementation "org.springframework:spring-test:$springVersion"
+    implementation "org.assertj:assertj-core:$assertjVersion"
+    implementation "org.apache.logging.log4j:log4j-slf4j2-impl:$slf4j2Version"
+}
+
+configurations {
+    cucumberRuntime {
+        extendsFrom testImplementation
+    }
 }
 
 test {
-    useJUnitPlatform()
+    exclude '**/CucumberRunner*'
+}
+
+tasks.register("remote") {
+    group = 'Remote'
+    description = 'Runs the Cucumber tests remotely'
+    doFirst {
+        if (!shouldRunTests()) {
+            throw new GradleException("Tests are not configured to run for the current settings.")
+        }
+    }
+    dependsOn("assemble", "compileTestJava", "processTestResources", "test")
+    finalizedBy("runWithoutBuild")
+}
+
+tasks.register('runWithoutBuild', JavaExec) {
+    group = 'Remote'
+    description = 'Runs the tests without rebuilding the project'
+
+    def country = System.getProperty('country')
+    def device = System.getProperty('device')
+    def suite = System.getProperty('suite')
+    def threads = System.getProperty('threads') ?: '1'
+    def tags = getTags(country, device)
+
+    doFirst {
+        println "Received properties: Country = $country, Device = $device, Suite = $suite, Threads = $threads"
+        println("Tags: (@all or @$country) and $tags")
+    }
+
+    systemProperties = [
+            'spring.profiles.active': "$device, $country"
+    ]
+
+    mainClass.set('io.cucumber.core.cli.Main')
+    classpath = configurations.cucumberRuntime +
+            sourceSets.main.output +
+            sourceSets.test.output
+
+    args = [
+            '--tags', "(@all or @$country) and $tags",
+            '--plugin', 'junit:build/test-results/test/cucumber-report/TESTS-TestSuites.xml',
+            '--plugin', "json:build/test-results/test/cucumber-report/${country}-${device}/detailed/cucumber.json",
+            '--plugin', "usage:build/test-results/test/cucumber-report/${country}-${device}/usage/usage.json",
+            '--plugin', 'rerun:build/rerun.txt',
+            '--glue', 'com.vvkalinin', 'src/test/resources/features',
+            '--threads', threads
+    ]
+
+    doLast {
+        println "Execution completed for Country = $country, Device = $device"
+    }
+}
+
+def shouldRunTests() {
+    def toSkip = [:]
+    def country = project.findProperty('country') ?: 'defaultCountry'
+    return !(toSkip.containsKey(country) && toSkip.get(country))
+}
+
+def getSkipTestIds() {
+    def skipTestIdsString = project.findProperty('skip.test.id') ?: ''
+    return skipTestIdsString ? skipTestIdsString.split(',') : []
+}
+
+def getTags(String country, String device) {
+    def resultTags = ['not @deprecated', 'not @skip']
+    resultTags.add("not @skip_$country")
+
+    def deviceTags = [
+            'desktop': 'not @mobile',
+            'mobile' : 'not @desktop'
+    ]
+
+    if (deviceTags.containsKey(device)) {
+        resultTags.add(deviceTags[device])
+    }
+
+    def skipTestIds = getSkipTestIds()
+    skipTestIds.each { id ->
+        resultTags.add("not @id=$id")
+    }
+
+    return resultTags.join(' and ')
 }
