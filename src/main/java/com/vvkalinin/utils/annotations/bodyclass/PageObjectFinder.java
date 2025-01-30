@@ -29,4 +29,11 @@ public class PageObjectFinder {
                 .orElseThrow(() -> new NoSuchBeanDefinitionException(page));
     }
 
+    public <T> T getBeanOfTypeByClassName(String name, Class<T> clazz) {
+        return applicationContext.getBeansOfType(clazz).values().stream()
+                .filter(bean -> startsWithIgnoreCase(bean.getClass().getSimpleName(), trimAllWhitespace(name)))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchBeanDefinitionException(name));
+    }
+
 }

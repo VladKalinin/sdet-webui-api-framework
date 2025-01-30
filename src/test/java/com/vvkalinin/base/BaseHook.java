@@ -12,8 +12,8 @@ import com.vvkalinin.constants.Device;
 
 import static com.vvkalinin.pageobject.Page.isCurrentPageOpened;
 
-import com.vvkalinin.framework.spring.AppConfig;
-import com.vvkalinin.pageobject.homepage.HomePage;
+import com.vvkalinin.configuration.AppConfig;
+import com.vvkalinin.pageobject.pages.homepage.HomePage;
 import com.vvkalinin.utils.ProfileMatcher;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;

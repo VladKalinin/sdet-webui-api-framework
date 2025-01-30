@@ -1,4 +1,4 @@
-package com.vvkalinin.pageobject.homepage;
+package com.vvkalinin.pageobject.pages.homepage;
 
 import com.vvkalinin.utils.annotations.bodyclass.BodyClass;
 import com.vvkalinin.utils.annotations.url.Url;
@@ -6,10 +6,11 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component("homePage")
-@Url("/")
-@Profile("us")
+@Url("/ua")
+@Profile("ua")
 @BodyClass("body.page-home")
-public class HomePageUs extends AbstractHomePage {
+public class HomePageUaImpl extends AbstractHomePage {
+
 
 
 }
