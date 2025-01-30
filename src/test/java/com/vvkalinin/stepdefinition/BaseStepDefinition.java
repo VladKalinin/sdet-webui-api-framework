@@ -1,6 +1,7 @@
 package com.vvkalinin.stepdefinition;
 
 import com.vvkalinin.utils.annotations.bodyclass.PageObjectFinder;
+import com.vvkalinin.utils.storage.Storage;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static com.codeborne.selenide.WebDriverRunner.url;
@@ -12,6 +13,9 @@ public class BaseStepDefinition {
 
     @Autowired
     protected PageObjectFinder pageObjectFinder;
+
+    @Autowired
+    protected Storage storage;
 
     protected void openPage(String page) {
         pageObjectFinder.getPageObjectBean(page).open();

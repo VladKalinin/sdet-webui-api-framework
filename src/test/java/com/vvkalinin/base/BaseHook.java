@@ -31,7 +31,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 
-
 @ContextConfiguration(classes = AppConfig.class)
 @CucumberContextConfiguration
 public class BaseHook {
@@ -65,7 +64,7 @@ public class BaseHook {
     @Autowired
     private HomePage homePage;
 
-    @Before(order = 1)
+    @Before(order = 1, value = "not @application=API")
     public void setBrowser() {
         Configuration.browser = browser;
         Configuration.browserCapabilities.setCapability(ACCEPT_INSECURE_CERTS, true);
@@ -75,24 +74,24 @@ public class BaseHook {
      * Allows Selenide to use JavaScript to set the value of an input
      * field directly instead of simulating typing character-by-character
      */
-    @Before(order = 2)
+    @Before(order = 2, value = "not @application=API")
     public void switchOnFastSetValue() {
         Configuration.fastSetValue = TRUE;
     }
 
-    @Before(order = 3)
+    @Before(order = 3, value = "not @application=API")
     public void setupTimeouts() {
         Configuration.pollingInterval = pollingInterval;
         Configuration.timeout = timeout;
         Configuration.pageLoadTimeout = pageLoadTimeout;
     }
 
-    @Before(order = 4)
+    @Before(order = 4, value = "not @application=API")
     public void setupBaseURL() {
         Configuration.baseUrl = baseUrl;
     }
 
-    @Before(order = 5)
+    @Before(order = 5, value = "not @application=API")
     public void resizeBrowser() {
         if (!isDesktop()) {
             System.setProperty("chromeoptions.mobileEmulation", "deviceName=" + mobileDeviceName);
@@ -101,7 +100,7 @@ public class BaseHook {
         }
     }
 
-    @Before(order = 7, value = "not @application=HYBRIS and not @application=SOLR and not @application=GITHUB and not @application=API")
+    @Before(order = 7, value = "not @application=API")
     public void openHomePage() {
         try {
             homePage.open();
@@ -114,7 +113,7 @@ public class BaseHook {
         switchTo().defaultContent();
     }
 
-    @After(order = 1)
+    @After(order = 1, value = "not @application=API")
     public void quitWebDriver() {
         clearBrowserLocalStorage();
         clearBrowserCache();
