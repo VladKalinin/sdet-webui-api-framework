@@ -20,7 +20,7 @@ public class CartStepDefinition extends BaseStepDefinition {
     public void getProducts(String userEmail, String productTitle) {
         int userId = getUserIdByEmail(userEmail);
         int productId = getProductIdByTitle(productTitle);
-        assertThat(cartController.getUsersCart(userId).getFirst().products()
+        assertThat(cartController.getUsersCart(userId).get(0).products()
                 .stream().anyMatch(p -> p.productId() == productId))
                 .withFailMessage("%s do not contains product with id %s in the cart", userEmail, productId)
                 .isTrue();
