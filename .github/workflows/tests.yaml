@@ -44,4 +44,4 @@ jobs:
 
       # Step 6: Run UI Tests
       - name: Run UI Tests
-        run: ./gradlew clean remote -Dcountry=us -Ddevice=desktop -Dspring.profiles.active=desktop,us -Dsuite=regression -Dthreads=2 -DSelenide.headless=ture -Dwebdriver.chrome.driver=/usr/local/bin/chromedriver
+        run: ./gradlew clean remote -Dcountry=us -Ddevice=desktop -Dspring.profiles.active=desktop,us -Dsuite=regression -Dthreads=2 -Dselenide.browser=chrome -Dselenide.headless=ture -Dwebdriver.chrome.driver=/usr/local/bin/chromedriver
