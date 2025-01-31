@@ -1,0 +1,37 @@
+name: Run tests
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  ui-tests:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Check out the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Download and Set Up Java 23 (Oracle)
+      - name: Set up Oracle JDK 23
+        run: |
+          wget -q --no-check-certificate -O jdk.tar.gz https://download.oracle.com/java/23/latest/jdk-23_linux-x64_bin.tar.gz
+          mkdir -p /opt/jdk
+          tar -xzf jdk.tar.gz -C /opt/jdk
+          echo "JAVA_HOME=/opt/jdk/jdk-23" >> $GITHUB_ENV
+          echo "/opt/jdk/jdk-23/bin" >> $GITHUB_PATH
+
+      # Step 3: Cache Gradle dependencies
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      # Step 4: Run Desktop + US Tests with Spring Profile
+      - name: Run UI Tests
+        run: ./gradlew clean remote -Dcountry=us -Ddevice=desktop -Dspring.profiles.active=desktop,us -Dsuite=regression -Dthreads=2
