@@ -32,4 +32,4 @@ jobs:
 
       # Step 4: Run UI Tests
       - name: Run UI Tests
-        run: ./gradlew remote --no-daemon --console=plain -Dcountry=us -Ddevice=desktop -Dspring.profiles.active=desktop,us -Dsuite=regression -Dthreads=2 -Dselenide.headless=true
+        run: ./gradlew remote --no-daemon --console=plain -Dcountry=us -Ddevice=desktop -Dspring.profiles.active=desktop,us -Dsuite=regression -Dthreads=2 -Dselenide.headless=true -Dselenide.options=--user-data-dir=/tmp/chrome-user-data
