@@ -51,6 +51,8 @@ test {
 tasks.register("remote") {
     group = 'Remote'
     description = 'Runs the Cucumber tests remotely'
+    System.setProperty('selenide.browser', "chrome")
+    System.setProperty('selenide.headless', "true")
     doFirst {
         if (!shouldRunTests()) {
             throw new GradleException("Tests are not configured to run for the current settings.")
