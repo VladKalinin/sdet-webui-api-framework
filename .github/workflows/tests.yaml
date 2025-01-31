@@ -30,6 +30,30 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # Step 4: Run UI Tests
+      # Step 4: Install Chrome and Chromedriver
+      - name: Install Chrome and Chromedriver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+          wget https://storage.googleapis.com/chrome-for-testing-public/132.0.6834.159/linux64/chrome-linux64.zip
+          unzip chrome-linux64.zip
+          sudo mv chrome-linux64/chrome /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chrome
+
+      # Step 5: Verify Chrome and Chromedriver Versions
+      - name: Verify Chrome and Chromedriver Versions
+        run: |
+          google-chrome --version
+          chromedriver --version
+
+      # Step 6: Kill Chrome Processes
+      - name: Kill Chrome Processes
+        run: pkill -f chrome || true
+
+      # Step 7: Create a temporary user data directory for Chrome
+      - name: Create Temporary Chrome User Data Directory
+        run: mkdir -p /tmp/chrome-user-data
+
+      # Step 8: Run UI Tests
       - name: Run UI Tests
-        run: ./gradlew remote --no-daemon --console=plain -Dcountry=us -Ddevice=desktop -Dspring.profiles.active=desktop,us -Dsuite=regression -Dthreads=2 -Dselenide.headless=true -Dselenide.options=--user-data-dir=/tmp/chrome-user-data
+        run: ./gradlew remote --no-daemon --console=plain -Dcountry=us -Ddevice=desktop -Dspring.profiles.active=desktop,us -Dsuite=regression -Dthreads=2 -Dselenide.headless=true -Dselenide.options="--user-data-dir=/tmp/chrome-user-data"
