@@ -21,19 +21,7 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      # Step 3: Install Chrome
-      - name: Install Chrome
-        run: sudo apt-get install -y google-chrome-stable
-
-      # Step 4: Install Chromedriver
-      - uses: nanasess/setup-chromedriver@v2
-        with:
-          # Optional: do not specify to match Chrome's version
-          chromedriver-version: '132.0.6834.159'
-          # Optional: if your chrome binary name is different
-          chromeapp: chrome
-
-      # Step 5: Cache Gradle dependencies
+      # Step 3: Cache Gradle dependencies
       - name: Cache Gradle dependencies
         uses: actions/cache@v3
         with:
@@ -42,6 +30,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # Step 6: Run UI Tests
+      # Step 4: Run UI Tests
       - name: Run UI Tests
-        run: ./gradlew clean remote -Dcountry=us -Ddevice=desktop -Dspring.profiles.active=desktop,us -Dsuite=regression -Dthreads=2 -Dselenide.browser=chrome -Dselenide.headless=ture -Dwebdriver.chrome.driver=/usr/local/bin/chromedriver
+        run: ./gradlew clean remote -Dcountry=us -Ddevice=desktop -Dspring.profiles.active=desktop,us -Dsuite=regression -Dthreads=2 -Dselenide.browser=chrome -Dselenide.headless=true
