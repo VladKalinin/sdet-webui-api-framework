@@ -26,12 +26,12 @@ jobs:
         run: sudo apt-get install -y google-chrome-stable
 
       # Step 4: Install Chromedriver
-      - name: Install Chromedriver
-        run: |
-          wget https://storage.googleapis.com/chrome-for-testing-public/132.0.6834.159/linux64/chrome-linux64.zip
-          unzip chrome-linux64.zip
-          sudo mv chrome-linux64/chrome /usr/local/bin/
-          sudo chmod +x /usr/local/bin/chrome
+      - uses: nanasess/setup-chromedriver@v2
+        with:
+          # Optional: do not specify to match Chrome's version
+          chromedriver-version: '132.0.6834.159'
+          # Optional: if your chrome binary name is different
+          chromeapp: chrome
 
       # Step 5: Cache Gradle dependencies
       - name: Cache Gradle dependencies
