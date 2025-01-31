@@ -20,8 +20,15 @@ jobs:
           wget -q --no-check-certificate -O jdk.tar.gz https://download.oracle.com/java/23/latest/jdk-23_linux-x64_bin.tar.gz
           mkdir -p /opt/jdk
           tar -xzf jdk.tar.gz -C /opt/jdk
+          ls -l /opt/jdk
           echo "JAVA_HOME=/opt/jdk/jdk-23" >> $GITHUB_ENV
           echo "/opt/jdk/jdk-23/bin" >> $GITHUB_PATH
+
+      # Step 3: Verify Java Installation
+      - name: Verify Java
+        run: |
+          echo "JAVA_HOME=$JAVA_HOME"
+          java -version
 
       # Step 3: Cache Gradle dependencies
       - name: Cache Gradle dependencies
