@@ -30,7 +30,7 @@ jobs:
         run: |
           wget https://storage.googleapis.com/chrome-for-testing-public/132.0.6834.159/linux64/chrome-linux64.zip
           unzip chrome-linux64.zip
-          sudo mv chrome /usr/local/bin/
+          sudo mv chrome-linux64/chrome /usr/local/bin/
           sudo chmod +x /usr/local/bin/chrome
 
       # Step 5: Cache Gradle dependencies
