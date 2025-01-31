@@ -28,11 +28,10 @@ jobs:
       # Step 4: Install Chromedriver
       - name: Install Chromedriver
         run: |
-          CHROME_VERSION=$(google-chrome --version | grep -oP "\d+\.\d+\.\d+")
-          wget https://chromedriver.storage.googleapis.com/${CHROME_VERSION}/chromedriver_linux64.zip
-          unzip chromedriver_linux64.zip
-          sudo mv chromedriver /usr/local/bin/
-          sudo chmod +x /usr/local/bin/chromedriver
+          wget https://storage.googleapis.com/chrome-for-testing-public/132.0.6834.159/linux64/chrome-linux64.zip
+          unzip chrome-linux64.zip
+          sudo mv chrome /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chrome
 
       # Step 5: Cache Gradle dependencies
       - name: Cache Gradle dependencies
