@@ -10,18 +10,13 @@ Feature: Apple Website UI tests
     When browser is on Home Page
     Then Top header is displayed on Home Page
 
-  @regression @all @id=3
-  Scenario: Verify promotion section is dsiplayed on Home Page
-    When browser is on Home Page
-    Then Top header is displayed on Home Page
-
-  @regression @all @desktop @id=4
+  @regression @all @desktop @id=3
   Scenario: Verify possible to redirect to Watch page via top header
     Given browser is on Home Page
     When click on watch tab on Home Page
     Then browser is on Watch Page
 
-  @regression @all @id=5
+  @regression @all @id=4
   Scenario: Verify possible to redirect to Watch page via top header
     When opens Watch Page
     Then welcome video is displayed on Watch Page

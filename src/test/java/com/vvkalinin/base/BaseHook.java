@@ -31,6 +31,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 
+import java.net.URL;
+
 @ContextConfiguration(classes = AppConfig.class)
 @CucumberContextConfiguration
 public class BaseHook {
@@ -68,6 +70,10 @@ public class BaseHook {
     public void setBrowser() {
         Configuration.browser = browser;
         Configuration.browserCapabilities.setCapability(ACCEPT_INSECURE_CERTS, true);
+        String host = System.getenv("SELENIUM_HUB");
+        if (host != null) {
+            Configuration.remote =  "http://" + host + ":4444/wd/hub";
+        }
     }
 
     /**

@@ -1,0 +1,41 @@
+version: '3'
+services:
+  hub:
+    image: selenium/hub
+    ports:
+      - "4444:4444"
+    platform: linux/amd64
+    networks:
+      - sdet-webui-api
+
+  chrome:
+    image: selenium/node-chrome
+    depends_on:
+      - hub
+    environment:
+      SE_EVENT_BUS_HOST: hub
+      SE_EVENT_BUS_PUBLISH_PORT: 4442
+      SE_EVENT_BUS_SUBSCRIBE_PORT: 4443
+    platform: linux/amd64
+    networks:
+      - sdet-webui-api
+
+  tests:
+    container_name: tests
+    image: gradle:8.5-jdk21
+    environment:
+      - SELENIUM_HUB=hub
+      - BROWSER=chrome
+    working_dir: /home/gradle/project
+    volumes:
+      - ./:/home/gradle/project
+    command: ./gradlew clean remote -Dcountry=us -Ddevice=mobile -Dspring.profiles.active=mobile,us -Dsuite=regression -Dthreads=3
+    depends_on:
+      - hub
+      - chrome
+    networks:
+      - sdet-webui-api
+
+networks:
+  sdet-webui-api:
+    external: true
